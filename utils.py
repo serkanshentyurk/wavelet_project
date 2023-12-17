@@ -125,7 +125,7 @@ def denoising_with_swt(data,
             converted_list_soft = threshold_swt(coeffs, converted, threshold, mode = 'soft')
             denoised_image_array_soft = pywt.iswtn(converted_list_soft, wavelet)
             converted_list_hard = threshold_swt(coeffs, converted, threshold, mode = 'hard')
-            denoised_image_array_soft = pywt.iswtn(converted_list_hard, wavelet)
+            denoised_image_array_hard = pywt.iswtn(converted_list_hard, wavelet)
         else:
             print('Wrong mode!')
     else:
@@ -188,7 +188,7 @@ def plot_signals(x, original, noisy, soft_denoised, hard_denoised,
     plt.legend()
     plt.title(f'Hard Thresholding Denoised Signal\nMSE: {mse_hard}')
 
-    plt.suptitle(f'Denoisig with Noise {epsilon}: Wavelet = {wavelet} - Threshold = {threshold}')
+    plt.suptitle(f'Denoisig with Noise {epsilon}: Wavelet = {wavelet} - Threshold = {threshold} - Borders = Symmetric')
     plt.tight_layout()
     plt.show()
     
@@ -204,14 +204,14 @@ def plot_images(original, noisy = None, denoised_soft = None, denoised_hard = No
         denoised_hard = np.zeros(original.shape)
         
     # Display or save the original, noisy, and denoised images
-    plt.figure(figsize=(14, 10))
+    plt.figure(figsize=(12, 12))
 
     plt.subplot(2, 2, 1)
     plt.imshow(original, cmap = 'gray')
     plt.title('Original Image')
     plt.axis('off')
 
-    plt.subplot(2, 3, 2)
+    plt.subplot(2, 2, 2)
     plt.imshow(noisy, cmap='gray')
     plt.title('Noisy Image')
     plt.axis('off')
@@ -221,7 +221,7 @@ def plot_images(original, noisy = None, denoised_soft = None, denoised_hard = No
     plt.title('Denoised Image - Mode: Soft')
     plt.axis('off')
 
-    plt.subplot(2, 3, 5)
+    plt.subplot(2, 2, 4)
     plt.imshow(denoised_hard, cmap='gray')
     plt.title('Denoised Image - Mode: Hard')
     plt.axis('off')
@@ -241,14 +241,19 @@ def calculate_snr(original_image, denoised_image):
     snr = 10 * np.log10(signal_power / noise_power)
     return snr
 
-def create_mask(image):
+def create_mask(image, random = True, mask_size = (512,512), true_count = 50544):
     '''
-    Create a mask for the condition given at the project pdf
+    Create a mask for the condition given at the project pdf or randomly allocated mask
     '''
-    mask = np.zeros_like(image)
-    mask[::10, :] = 1
-    mask[:, ::10] = 1
-    mask = mask > 0
+    if random:
+        mask = np.zeros(mask_size, dtype=bool)
+        indices = np.random.choice(np.prod(mask_size), true_count, replace=False)
+        mask.flat[indices] = True
+    else:
+        mask = np.zeros_like(image)
+        mask[::10, :] = 1
+        mask[:, ::10] = 1
+        mask = mask > 0
     return mask
 
 
