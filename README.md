@@ -13,3 +13,8 @@ Then you can run the following and open code.ipynb file (or work with VS Code)
 ```
 jupyter notebook
 ```
+if it doesn't work:
+```
+pip install jupyter
+jupyter notebook
+```
