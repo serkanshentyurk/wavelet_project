@@ -1,10 +1,15 @@
 # wavelet_project
 
-clone the repo
-create a new end and install requirements
+To setup the environment:
+
 ```
-python3 -m venv env
-source env/bin/activate
-pip install -r requirements.txt
+git clone https://github.com/serkanshentyurk/wavelet_project.git
+cd wavelet_project
+conda env create -f environment.yml
+conda activate wavelet
 ```
-run the jupyter notebook 'code'
+
+Then you can run the following and open code.ipynb file (or work with VS Code)
+```
+jupyter notebook
+```
